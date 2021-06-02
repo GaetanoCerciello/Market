@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ortofrutta html</title>
+
+
+    <!--STYLE CSS-->
+    <style>
+        table,
+        td {
+            border: 1px green;
+            border-style: groove;
+            border-collapse: inherit;
+            border-left: 100 px;
+            font-family: arial white;
+            color: white;
+            text-align: center;
+        }
+
+        th {
+            color: white;
+            border-style: groove;
+            text-align: center;
+        }
+
+        #SezioneAcquisti,
+        #BottoneAcquista {
+            position: 50px;
+            color: blue;
+            margin-top: 10px;
+            animation: alternate-reverse;
+        }
+
+        #titolo {
+            font-family: fantasy;
+            color: green;
+        }
+
+        #titolo2 {
+            font-family: cursive;
+            color: green;
+
+        }
+
+        body {
+            background-color: black;
+        }
+
+        p {
+            color: whitesmoke;
+            font-weight: 20px;
+            font-family: Arial;
+        }
+
+        li {
+            float: left;
+        }
+
+        a {
+            display: block;
+            padding: 8px;
+            background-color: green;
+
+        }
+
+        #nav-item {
+            border-style: solid;
+        }
+    </style>
+    <!--***************************************** -->
+
+</head>
+
+<body onload="getOrtoFrutta()">
+
+
+    <h1 id="titolo">REPARTO ORTO-FRUTTA</h1>
+
+    <div>
+
+        <li class="nav-item"><a href="/index.html ">Home</a></li>
+        <li class="nav-item"><a href="/chisiamo.html">Chi Siamo</a></li>
+        <li class="nav-item"><a href="/contatti.html">Contatti</a></li>
+
+    </div>
+    <br>
+
+
+    <div>
+        <br>
+        <h2 id="titolo2">Prendi qualcosa dal nostro magazzino :)</h2>
+        <br>
+    </div>
+
+    <div>
+        
+    </div>
+
+
+
+
+    <div id="placeholder"></div>
+
+
+
+    <script>
+        /*
+        let objArr = [];
+        let prodObj = {idProdotto: "2", qta: "34", prezzo:"12.78"};
+      objArr.push(prodObj); */
+
+
+
+
+
+
+
+        async function getOrtoFrutta() {
+            let url = "/orto/lista";
+            const response = await fetch(url); // legge da network (con GET)
+            const ortofrutta = await response.json(); // prende il risultato
+            console.log(ortofrutta);
+            generaTabellaOrtoFrutta(ortofrutta);
+        }
+
+
+        function generaTabellaOrtoFrutta(frutta) {
+
+            let tabella = document.createElement("table");
+            let riga = document.createElement("tr");
+
+            let cella = document.createElement("th");
+            cella.innerText = "Numero di Riga";
+            riga.appendChild(cella);
+
+            cella = document.createElement("th");
+            cella.innerText = "Colore";
+            riga.appendChild(cella);
+
+            cella = document.createElement("th");
+            cella.innerText = "Descrizione";
+            riga.appendChild(cella);
+
+
+            cella = document.createElement("th");
+            cella.innerText = "Id";
+            riga.appendChild(cella);
+
+
+            cella = document.createElement("th");
+            cella.innerText = "Prezzo Unitario";
+            riga.appendChild(cella);
+
+
+
+            cella = document.createElement("th")
+            cella.innerText = "Quantità";
+            riga.appendChild(cella);
+
+
+            cella = document.createElement("th");
+            cella.innerText = "Peso";
+            riga.appendChild(cella)
+
+
+            cella = document.createElement("th");
+            cella.innerText = "Totale";
+            riga.appendChild(cella);
+
+
+
+            cella = document.createElement("th");
+            cella.innerText = "Seleziona i prodotti";
+            riga.appendChild(cella);
+
+
+
+
+
+
+
+            tabella.appendChild(riga); // riga intestazione
+
+            let contatore = 1;
+
+
+            for (let ortofrutta of frutta) {
+                riga = document.createElement("tr");
+
+                cella = document.createElement("td");
+                cella.innerText = contatore;
+                contatore++;
+                riga.appendChild(cella);
+
+                cella = document.createElement("td");
+                cella.innerText = ortofrutta.colore;
+                riga.appendChild(cella);
+
+                cella = document.createElement("td");
+                cella.innerText = ortofrutta.descrizione;
+                riga.appendChild(cella);
+
+                cella = document.createElement("td");
+                cella.innerText = ortofrutta.id;
+                riga.appendChild(cella);
+
+
+                cella = document.createElement("td");
+                cella.innerText = ortofrutta.prezzoUnitario;
+                riga.appendChild(cella);
+
+
+
+                //QUANTITà
+                cella = document.createElement("td");
+                let n = document.createElement("input");
+                n.setAttribute("type", "number");
+                n.setAttribute("id", "n");
+                n.setAttribute("oninput", "calcola()");
+                cella.appendChild(n);
+
+                riga.appendChild(cella);
+
+
+
+                //se il prodotto da pesare creo il checkbox altrimenti una cella vuota
+
+                //PESO
+                cella = document.createElement("td");
+                if (ortofrutta.pesatura == "DA_PESARE") {
+                    let ck = document.createElement("input");
+                    ck.setAttribute("type", "checkbox");
+                    ck.setAttribute("id", "ck");
+                    ck.setAttribute("onclick","pesare()");
+                    cella.appendChild(ck);
+                } else {
+                    cella.innerText = "*";
+                }
+                riga.appendChild(cella);
+
+
+
+
+                //COLONNA DEL TOTALE
+                cella = document.createElement("td");
+                riga.appendChild(cella);
+
+
+
+                cella = document.createElement("td");
+                let sel = document.createElement("input");
+                sel.setAttribute("type", "checkbox");
+                cella.appendChild(sel);
+                riga.appendChild(cella);
+
+             
+
+
+
+
+
+
+                tabella.appendChild(riga);
+            }
+
+            let placeholder = document.getElementById("placeholder");
+            placeholder.appendChild(tabella);
+        }
+
+
+        //quantita x prezzo unitario
+        // x 1) se il contenuto è uguale a stringa vuota è "no pesatura", se invece
+        // e "da pesare" deve pulire il flag sul checkbox e deve pulire il campo totale.
+        //2)se da pesare è uguale a true,pulire totale e pulire checkbox,altrimenti fai quello che fai adesso.
+        function calcola() {
+            let el = window.event.target; //prende il campo quantita quando si interagisce con l'interfaccia 
+
+            console.log("el.value=" + el.value);
+            let tr = el.closest("tr"); //prende l'elemento tr più vicino all'input
+            let dapesare = tr.cells[6].innerText !== "*";
+            // console.log("dapesare="+dapesare);
+            //console.log(tr.cells[6]);
+
+            if (dapesare) {
+                //document.getElementById("peso").checked= false;
+                //el.closest("input");
+
+                // console.log("******",tr.cells[6].children);
+                tr.cells[6].children[0].checked = false;
+                tr.cells[7].innerText = "";
+
+            } else {
+
+                let p_unitario = tr.cells[4].innerText;
+                console.log("prezzounitario=" + p_unitario);
+                let formula;
+                formula = el.value * p_unitario;
+                tr.cells[7].innerText = formula;
+            }
+
+        }
+
+        function pesare() {
+            let elemento = window.event.target;
+            let tr = elemento.closest("tr");
+            if (tr.cells[6].children[0].checked == false) {
+                tr.cells[7].innerText = "";
+                return;
+            }
+
+           let quantita=tr.cells[5].children[0].value;
+           let p_unitario = tr.cells[4].innerText;
+           let totale=quantita*p_unitario*0.5;
+           tr.cells[7].innerText = totale;
+        }
+
+    </script>
+
+    <div id="SezioneAcquisti">
+
+        <button id="BottoneAcquista">ACQUISTA</button>
+
+
+
+
+
+    </div>
+
+    <div id="costototale">
+        <p>Il tuo costo totale:</p>
+    </div>
+
+
+
+</body>
+
+</html>
